@@ -18,7 +18,7 @@ Community
 Documentation
 ---------
 
-* [中文文档](https://github.com/name5566/leaf/blob/master/TUTORIAL_ZH.md)
+* [中文文档](https://github.com/Corner-W/sk/blob/master/TUTORIAL_ZH.md)
 
 Licensing
 ---------
