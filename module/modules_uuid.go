@@ -1,0 +1,9 @@
+package module
+
+const (
+	MOUDLE_ID_NULL = iota
+	MOUDLE_ID_GAME
+	MOUDLE_ID_USER
+	MODULE_ID_DISPATCH
+	MODULE_ID_AGENT
+)
