@@ -17,7 +17,11 @@ type Mbody struct {
 }
 
 type Msg struct {
+	// T string `json:"proto"`
 	H Mhead
-
 	B Mbody
 }
+
+const (
+	MSG_TYPE_PING = iota
+)

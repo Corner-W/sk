@@ -5,8 +5,8 @@ package netty
 import (
 	"bufio"
 	"crypto/tls"
-	"log"
 	"net"
+	"sk/log"
 	"sync"
 )
 
@@ -106,7 +106,7 @@ func (s *server) ListenAndServe() {
 
 	for {
 		conn, _ := listener.Accept()
-
+		log.Debug("Accept succefully")
 		// go client.listen()
 		//reader := bufio.NewReader(conn)
 		go s.MsgHandler(conn)
@@ -115,7 +115,7 @@ func (s *server) ListenAndServe() {
 
 // Creates new tcp server instance
 func New(address string) *server {
-	log.Println("Creating server with address", address)
+	log.Debug("Creating server with address", address)
 	server := &server{
 		address: address,
 	}

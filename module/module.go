@@ -71,7 +71,7 @@ func Init() {
 
 		m.mi.OnInit()
 		//	m.wg.Add(1)
-
+		log.Debug("start module %s task queue!", m.Name)
 		go run(m)
 
 		return true

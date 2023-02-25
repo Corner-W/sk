@@ -1,3 +1,11 @@
+# github.com/confluentinc/confluent-kafka-go v1.9.2
+## explicit; go 1.13
+github.com/confluentinc/confluent-kafka-go/kafka
+github.com/confluentinc/confluent-kafka-go/kafka/librdkafka_vendor
+# github.com/eclipse/paho.mqtt.golang v1.4.2
+## explicit; go 1.14
+github.com/eclipse/paho.mqtt.golang
+github.com/eclipse/paho.mqtt.golang/packets
 # github.com/golang/protobuf v1.5.2
 ## explicit; go 1.9
 github.com/golang/protobuf/proto
@@ -9,14 +17,20 @@ github.com/gorilla/websocket
 github.com/name5566/leaf/chanrpc
 github.com/name5566/leaf/conf
 github.com/name5566/leaf/db/mongodb
-github.com/name5566/leaf/go
 github.com/name5566/leaf/log
 github.com/name5566/leaf/network
 github.com/name5566/leaf/recordfile
 github.com/name5566/leaf/timer
 github.com/name5566/leaf/util
-# google.golang.org/protobuf v1.26.0
-## explicit; go 1.9
+# golang.org/x/net v0.7.0
+## explicit; go 1.17
+golang.org/x/net/internal/socks
+golang.org/x/net/proxy
+# golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
+## explicit
+golang.org/x/sync/semaphore
+# google.golang.org/protobuf v1.28.0
+## explicit; go 1.11
 google.golang.org/protobuf/encoding/prototext
 google.golang.org/protobuf/encoding/protowire
 google.golang.org/protobuf/internal/descfmt
