@@ -2,8 +2,8 @@ package main
 
 import (
 	"encoding/json"
-	"sk/log"
-	"sk/module"
+	"github.com/Corner-W/sk/log"
+	"github.com/Corner-W/sk/module"
 	"time"
 	"unsafe"
 )

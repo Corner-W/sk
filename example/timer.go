@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/Corner-W/sk/log"
-	"github.com/antlabs/timer"
+	"github.com/Corner-W/sk/timer"
 	"time"
 )
 

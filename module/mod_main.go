@@ -1,8 +1,8 @@
 package module
 
 import (
-	"github.com/Corner-W/sk/game"
-	"github.com/Corner-W/sk/user"
+	"github.com/Corner-W/sk/module/game"
+	"github.com/Corner-W/sk/module/user"
 )
 
 func Modules_main() {
