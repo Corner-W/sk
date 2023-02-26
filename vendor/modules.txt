@@ -22,6 +22,13 @@ github.com/name5566/leaf/network
 github.com/name5566/leaf/recordfile
 github.com/name5566/leaf/timer
 github.com/name5566/leaf/util
+# github.com/reiver/go-oi v1.0.0
+## explicit
+github.com/reiver/go-oi
+# github.com/reiver/go-telnet v0.0.0-20180421082511-9ff0b2ab096e
+## explicit
+github.com/reiver/go-telnet
+github.com/reiver/go-telnet/telsh
 # golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4
 ## explicit; go 1.11
 golang.org/x/net/internal/socks

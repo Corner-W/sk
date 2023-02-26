@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/Corner-W/sk/log"
 	"github.com/Corner-W/sk/module"
+	"github.com/Corner-W/sk/telnet"
 )
 
 func main() {
@@ -11,6 +12,7 @@ func main() {
 
 	module.Modules_main()
 
+	telnet.Run()
 	select {}
 
 }

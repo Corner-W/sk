@@ -12,7 +12,7 @@ func Modules_main() {
 	ModuleReg("user", MOUDLE_ID_USER, user.New(), 1024)
 	ModuleReg("dispatch", MODULE_ID_DISPATCH, NewDispatch(), 1024)
 	ModuleReg("agent", MODULE_ID_AGENT, NewAgent(), 2048)
-	ModuleReg("mqtt", MODULE_ID_MQTT, NewMqtt(), 2048)
+	// ModuleReg("mqtt", MODULE_ID_MQTT, NewMqtt(), 2048)
 
 	/*模块初始化，和任务启动*/
 	Init()
