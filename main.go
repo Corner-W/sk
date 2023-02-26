@@ -12,7 +12,8 @@ func main() {
 
 	module.Modules_main()
 
-	telnet.Run()
+	go telnet.Run()
+
 	select {}
 
 }

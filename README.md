@@ -33,9 +33,7 @@ SK 的模块机制
 * 每个模块运行在一个单独的 goroutine 中
 * 模块间通过一套轻量的 channel 机制通讯
 
-Leaf 不建议在游戏服务器中设计过多的模块。
-
-游戏服务器在启动时进行模块的注册，例如：
+服务器在启动时进行模块的注册，例如：
 
 ```go
 func Modules_main() {
@@ -77,7 +75,7 @@ type Module interface {
 ---------------
 
 * sk/module 业务模块管理
-* leaf/db 数据库相关，目前支持 [MongoDB](https://www.mongodb.org/)
+* sk/db 数据库相关，目前支持 [MongoDB](https://www.mongodb.org/)
 * sk/gate 网关模块，负责客户端的接入
 * sk/netty 网络层
 * sk/log 日志相关
@@ -93,9 +91,8 @@ type Module interface {
 Documentation
 ---------
 
-* [中文文档](https://github.com/Corner-W/sk/blob/master/TUTORIAL_ZH.md)
 
 Licensing
 ---------
 
-Leaf is licensed under the Apache License, Version 2.0. 
+SK is licensed under the Apache License, Version 2.0. 
