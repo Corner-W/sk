@@ -22,7 +22,8 @@ SK 的关注点：
 * 良好的使用体验。SK 总是尽可能的提供简洁和易用的module接口，尽可能的提升开发的效率
 * 稳定性。SK 总是尽可能的恢复运行过程中的错误，避免崩溃
 * 多核支持。SK 通过模块机制和 尽可能的利用多核资源，同时又尽量避免各种副作用
-* 模块机制。
+* 模块机制
+* 增加telnet后端服务器，命令行配置功能
 
 SK 的模块机制
 ---------------
@@ -60,7 +61,17 @@ type Module interface {
 }
 ```
 
+增加telnet后端调试命令
+```go
+    shellHandler := telsh.NewShellHandler()
+    shellHandler.Register("mod", telsh.ProducerFunc(ModuleManagerProducer))
 
+    addr := ":5001"
+    log.Debug("telnet server is starting ...")
+    if err := telnet.ListenAndServe(addr, shellHandler); nil != err {
+        panic(err)
+    }
+```
 
 源码概览
 ---------------
@@ -69,10 +80,9 @@ type Module interface {
 * leaf/db 数据库相关，目前支持 [MongoDB](https://www.mongodb.org/)
 * sk/gate 网关模块，负责客户端的接入
 * sk/netty 网络层
-* leaf/log 日志相关
-* leaf/recordfile 用于管理游戏数据
-* leaf/timer 定时器相关
-* leaf/util 辅助库
+* sk/log 日志相关
+* sk/telnet telnet shell服务器模块
+
 
 使用 SK 开发服务器
 ---------------
