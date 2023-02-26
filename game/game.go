@@ -2,7 +2,7 @@ package game
 
 import (
 	"fmt"
-	"sk/log"
+	"github.com/Corner-W/sk/log"
 )
 
 type GameTask struct {

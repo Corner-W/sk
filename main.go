@@ -1,8 +1,8 @@
 package main
 
 import (
-	"sk/log"
-	"sk/module"
+	"github.com/Corner-W/sk/log"
+	"github.com/Corner-W/sk/module"
 )
 
 func main() {

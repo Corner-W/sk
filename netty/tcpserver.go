@@ -5,8 +5,8 @@ package netty
 import (
 	"bufio"
 	"crypto/tls"
+	"github.com/Corner-W/sk/log"
 	"net"
-	"sk/log"
 	"sync"
 )
 

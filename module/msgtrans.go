@@ -1,6 +1,6 @@
 package module
 
-import "sk/log"
+import "github.com/Corner-W/sk/log"
 
 func MsgSend(dest uint32, msg interface{}) bool {
 

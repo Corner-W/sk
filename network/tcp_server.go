@@ -1,8 +1,8 @@
 package network
 
 import (
+	"github.com/Corner-W/sk/log"
 	"net"
-	"sk/log"
 	"sync"
 	"time"
 )

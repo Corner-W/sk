@@ -3,7 +3,7 @@ package module
 /*消息分发模块，负责接收client端的消息*/
 
 import (
-	"sk/log"
+	"github.com/Corner-W/sk/log"
 )
 
 type AgentTask struct {

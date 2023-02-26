@@ -1,8 +1,8 @@
 package module
 
 import (
+	"github.com/Corner-W/sk/log"
 	"net"
-	"sk/log"
 )
 
 type TcpClient struct {

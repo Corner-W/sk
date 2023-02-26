@@ -1,7 +1,7 @@
 package user
 
 import (
-	"sk/log"
+	"github.com/Corner-W/sk/log"
 )
 
 type UserTask struct {

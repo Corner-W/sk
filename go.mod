@@ -1,4 +1,4 @@
-module sk
+module github.com/Corner-W/sk
 
 go 1.19
 
@@ -12,9 +12,7 @@ require (
 )
 
 require (
-	golang.org/x/net v0.7.0 // indirect
+	golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
-	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
