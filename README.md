@@ -25,6 +25,19 @@ SK 的关注点：
 * 模块机制
 * 增加telnet后端服务器，命令行配置功能
 
+
+源码概览
+---------------
+
+* sk/module 业务模块管理
+* sk/db 数据库相关，目前支持 [MongoDB](https://www.mongodb.org/)
+* sk/gate 网关模块，负责客户端的接入
+* sk/netty 网络层
+* sk/log 日志相关
+* sk/telnet telnet shell服务器模块
+* sk/timer 定时器
+
+
 SK 的模块机制
 ---------------
 
@@ -60,6 +73,7 @@ type Module interface {
 ```
 
 增加telnet后端调试命令
+-----------
 ```go
     shellHandler := telsh.NewShellHandler()
     shellHandler.Register("mod", telsh.ProducerFunc(ModuleManagerProducer))
@@ -71,15 +85,36 @@ type Module interface {
     }
 ```
 
-源码概览
----------------
+Timer 定时器
+----------
+```go
+//循环定时器
+func main() {
+        tm := timer.NewTimer()
 
-* sk/module 业务模块管理
-* sk/db 数据库相关，目前支持 [MongoDB](https://www.mongodb.org/)
-* sk/gate 网关模块，负责客户端的接入
-* sk/netty 网络层
-* sk/log 日志相关
-* sk/telnet telnet shell服务器模块
+        tm.ScheduleFunc(1*time.Second, func() {
+                log.Printf("schedule\n")
+        })
+
+        tm.Run()
+}
+
+//一次定时器
+
+func main() {
+tm := timer.NewTimer()
+
+tm.AfterFunc(1*time.Second, func() {
+log.Printf("after\n")
+})
+
+tm.AfterFunc(10*time.Second, func() {
+log.Printf("after\n")
+})
+tm.Run()
+}
+
+```
 
 
 使用 SK 开发服务器

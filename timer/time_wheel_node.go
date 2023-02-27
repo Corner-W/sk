@@ -51,6 +51,30 @@ func (t *Time) lockPushBack(node *timeNode, level uint64, index uint64) {
 	atomic.StoreUint64(&node.version, atomic.LoadUint64(&t.version))
 }
 
+func (t *Time) lockPushBackv2(node *timeNodev2, level uint64, index uint64) {
+	t.Lock()
+	defer t.Unlock()
+	if atomic.LoadUint32(&node.stop) == haveStop {
+		return
+	}
+
+	t.AddTail(&node.Head)
+	atomic.StorePointer(&node.list, unsafe.Pointer(t))
+	//更新节点的version信息
+	atomic.StoreUint64(&node.version, atomic.LoadUint64(&t.version))
+}
+
+type timeNodev2 struct {
+	expire     uint64
+	userExpire time.Duration
+	callback   func(t TimeNoder, v interface{})
+	stop       uint32
+	list       unsafe.Pointer //存放表头信息
+	version    uint64         //保存节点版本信息
+	isSchedule bool
+
+	list.Head
+}
 type timeNode struct {
 	expire     uint64
 	userExpire time.Duration
@@ -67,11 +91,30 @@ type timeNode struct {
 // 1.存在于初始化链表中
 // 2.被移动到tmp链表
 // 3.1 和 3.2是if else的状态
-// 	3.1被移动到new链表
-// 	3.2直接执行
+//
+//	3.1被移动到new链表
+//	3.2直接执行
+//
 // 1和3.1状态是没有问题的
 // 2和3.2状态会是没有锁保护下的操作,会有数据竞争
 func (t *timeNode) Stop() {
+
+	atomic.StoreUint32(&t.stop, haveStop)
+
+	// 使用版本号算法让timeNode知道自己是否被移动了
+	// timeNode的version和表头的version一样表示没有被移动可以直接删除
+	// 如果不一样，可能在第2或者3.2状态，使用惰性删除
+	cpyList := (*Time)(atomic.LoadPointer(&t.list))
+	cpyList.Lock()
+	defer cpyList.Unlock()
+	if atomic.LoadUint64(&t.version) != atomic.LoadUint64(&cpyList.version) {
+		return
+	}
+
+	cpyList.Del(&t.Head)
+}
+
+func (t *timeNodev2) Stop() {
 
 	atomic.StoreUint32(&t.stop, haveStop)
 

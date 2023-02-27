@@ -46,3 +46,17 @@ func NewTimer(opt ...Option) Timer {
 
 	return newTimeWheel()
 }
+
+// 定时器接口 version 2
+type Timerv2 interface {
+	// 一次性定时器
+	//TimerStart(expire time.Duration, m interface{}, callback func(t TimeNoder, v interface{})) TimeNoder
+	// 周期性定时器
+	TimerLoopInit(expire time.Duration, m interface{}, callback func(t TimeNoder, v interface{})) TimeNoder
+
+	// 运行
+	TimerStart()
+
+	// 停止所有定时器
+	//Stop()
+}

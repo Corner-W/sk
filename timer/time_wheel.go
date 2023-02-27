@@ -125,6 +125,46 @@ func (t *timeWheel) add(node *timeNode, jiffies uint64) *timeNode {
 	return node
 }
 
+func (t *timeWheel) addv2(node *timeNodev2, jiffies uint64) *timeNodev2 {
+
+	var head *Time
+	expire := node.expire
+	idx := expire - jiffies
+
+	level, index := uint64(1), uint64(0)
+
+	if idx < nearSize {
+
+		index = uint64(expire) & nearMask
+		head = t.t1[index]
+
+	} else {
+
+		max := maxVal()
+		for i := 0; i <= 3; i++ {
+
+			if idx > max {
+				idx = max
+				expire = idx + jiffies
+			}
+
+			if uint64(idx) < levelMax(i+1) {
+				index = uint64(expire >> (nearShift + i*levelShift) & levelMask)
+				head = t.t2Tot5[i][index]
+				level = uint64(i) + 2
+				break
+			}
+		}
+	}
+
+	if head == nil {
+		panic("not found head")
+	}
+
+	head.lockPushBackv2(node, level, index)
+
+	return node
+}
 func (t *timeWheel) AfterFunc(expire time.Duration, callback func()) TimeNoder {
 
 	jiffies := atomic.LoadUint64(&t.jiffies)
@@ -159,6 +199,21 @@ func (t *timeWheel) ScheduleFunc(userExpire time.Duration, callback func()) Time
 	return t.add(node, jiffies)
 }
 
+func (t *timeWheel) TimerLoopInit(userExpire time.Duration, m interface{}, callback func(t TimeNoder, v interface{})) TimeNoder {
+
+	jiffies := atomic.LoadUint64(&t.jiffies)
+
+	expire := getExpire(userExpire, jiffies)
+
+	node := &timeNodev2{
+		userExpire: userExpire,
+		expire:     uint64(expire),
+		callback:   callback,
+		isSchedule: true,
+	}
+
+	return t.addv2(node, jiffies)
+}
 func (t *timeWheel) Stop() {
 	t.cancel()
 }
@@ -190,9 +245,9 @@ func (t *timeWheel) cascade(levelIndex int, index int) {
 }
 
 // moveAndExec函数功能
-//1. 先移动到near链表里面
-//2. near链表节点为空时，从上一层里面移动一些节点到下一层
-//3. 再执行
+// 1. 先移动到near链表里面
+// 2. near链表节点为空时，从上一层里面移动一些节点到下一层
+// 3. 再执行
 func (t *timeWheel) moveAndExec() {
 
 	// 这里时间溢出
@@ -284,6 +339,22 @@ func (t *timeWheel) CustomFunc(n Next, callback func()) TimeNoder {
 }
 
 func (t *timeWheel) Run() {
+
+	// 10ms精度
+	tk := time.NewTicker(time.Millisecond * 10)
+	defer tk.Stop()
+
+	for {
+		select {
+		case <-tk.C:
+			t.run(get10Ms)
+		case <-t.ctx.Done():
+			return
+		}
+	}
+}
+
+func (t *timeWheel) TimerStart() {
 
 	// 10ms精度
 	tk := time.NewTicker(time.Millisecond * 10)
