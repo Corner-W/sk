@@ -24,6 +24,7 @@ type module struct {
 
 	Id   uint32
 	Name string
+	stat int
 }
 
 var modules sync.Map
@@ -46,6 +47,7 @@ func ModuleReg(name string, mid uint32, mi Module, buflen uint32) bool {
 	m.Id = mid
 	//
 	m.Name = name
+	m.stat = MODULE_STATE_INIT
 
 	//mods = append(mods, m)
 	v, ok := modules.Load(mid)
@@ -54,6 +56,7 @@ func ModuleReg(name string, mid uint32, mi Module, buflen uint32) bool {
 	} else {
 
 		log.Fatal("Module %s  register Err! module id has been used by %s[%d] ", m.Name, v.(*module).Name, mid)
+
 		return false
 	}
 
@@ -81,6 +84,7 @@ func Init() {
 
 func run(m *module) {
 
+	m.stat = MODULE_STATE_RUNNING
 	for {
 
 		select {
@@ -92,7 +96,9 @@ func run(m *module) {
 			} else {
 				/*如果channel 被关闭，则会导致死循环，重写nil可以ignore该分支*/
 				m.Que = nil
+				m.stat = MODULE_STATE_CRASH
 				log.Error("module running err")
+				break
 			}
 		default:
 			// log.Error("default: err!")

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/Corner-W/sk/log"
 	"github.com/Corner-W/sk/module"
+	"github.com/Corner-W/sk/module/agent"
 	"time"
 	"unsafe"
 )
@@ -17,7 +18,7 @@ type SliceMock struct {
 // TCP 客户端
 func main() {
 
-	tc := module.NewClient()
+	tc := agent.NewClient()
 
 	msg := &module.Msg{
 		H: module.Mhead{
