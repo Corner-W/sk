@@ -57,18 +57,10 @@ func Run() {
 	// Register the "five" command.
 	commandName := "five"
 	commandProducer := telsh.ProducerFunc(fiveProducer)
-
 	shellHandler.Register(commandName, commandProducer)
-
-	// Register the "dance" command.
-	commandName = "dance"
-	commandProducer = telsh.ProducerFunc(danceProducer)
-
-	shellHandler.Register(commandName, commandProducer)
-
-	shellHandler.Register("dance", telsh.ProducerFunc(danceProducer))
 
 	shellHandler.Register("mod", telsh.ProducerFunc(ModuleManagerProducer))
+	shellHandler.Register("msgsend", telsh.ProducerFunc(ModuleMsgSendProducer))
 	//fmt.Println("run success!...")
 	addr := ":5001"
 	log.Debug("telnet server is starting ...")

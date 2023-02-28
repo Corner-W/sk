@@ -11,7 +11,7 @@ type Module interface {
 	MsgProc(closeSig chan bool, message interface{})
 }
 
-type module struct {
+type Mod struct {
 	mi       Module
 	closeSig chan bool
 	//wg       sync.WaitGroup
@@ -24,20 +24,20 @@ type module struct {
 
 	Id   uint32
 	Name string
-	stat int
+	Stat int
 }
 
-var modules sync.Map
+var Modules sync.Map
 
-func QueryMbyID(mid uint32) (*module, bool) {
+func QueryMbyID(mid uint32) (*Mod, bool) {
 
-	m, ok := modules.Load(mid)
+	m, ok := Modules.Load(mid)
 
-	return m.(*module), ok
+	return m.(*Mod), ok
 }
 
 func ModuleReg(name string, mid uint32, mi Module, buflen uint32) bool {
-	m := new(module)
+	m := new(Mod)
 	m.mi = mi
 	m.closeSig = make(chan bool, 1)
 
@@ -47,15 +47,15 @@ func ModuleReg(name string, mid uint32, mi Module, buflen uint32) bool {
 	m.Id = mid
 	//
 	m.Name = name
-	m.stat = MODULE_STATE_INIT
+	m.Stat = MODULE_STATE_INIT
 
 	//mods = append(mods, m)
-	v, ok := modules.Load(mid)
+	v, ok := Modules.Load(mid)
 	if !ok {
-		modules.Store(mid, m)
+		Modules.Store(mid, m)
 	} else {
 
-		log.Fatal("Module %s  register Err! module id has been used by %s[%d] ", m.Name, v.(*module).Name, mid)
+		log.Fatal("Module %s  register Err! module id has been used by %s[%d] ", m.Name, v.(*Mod).Name, mid)
 
 		return false
 	}
@@ -67,9 +67,9 @@ func ModuleReg(name string, mid uint32, mi Module, buflen uint32) bool {
 func Init() {
 
 	/*集中启动所有的业务模块*/
-	modules.Range(func(key, value interface{}) bool {
+	Modules.Range(func(key, value interface{}) bool {
 		id := key.(uint32)
-		m := value.(*module)
+		m := value.(*Mod)
 		log.Debug("%s[%d] module starting...", m.Name, id)
 
 		m.mi.OnInit()
@@ -82,9 +82,18 @@ func Init() {
 
 }
 
-func run(m *module) {
+/*
+对channel操作的集中场景分析：
+--------------------------------------------------------------
+｜操作	      		｜ nil的channel	 正常channel	  已关闭的channel
+--------------------------------------------------------------
+｜读 <-ch	   		｜ 阻塞	         成功或阻塞	  读到零值
+｜写 ch<-	  		｜ 阻塞	         成功或阻塞	  panic
+｜关闭 close(ch)		｜ panic	     成功	      panic
+*/
+func run(m *Mod) {
 
-	m.stat = MODULE_STATE_RUNNING
+	m.Stat = MODULE_STATE_RUNNING
 	for {
 
 		select {
@@ -95,13 +104,14 @@ func run(m *module) {
 				m.mi.MsgProc(m.closeSig, msg)
 			} else {
 				/*如果channel 被关闭，则会导致死循环，重写nil可以ignore该分支*/
-				m.Que = nil
-				m.stat = MODULE_STATE_CRASH
+				//m.Que = nil
+				m.Stat = MODULE_STATE_CRASH
 				log.Error("module running err")
 				break
 			}
-		default:
-			// log.Error("default: err!")
+			//default:
+			// 此处需要释放cpu，否则cpu占用会非常高
+			//log.Error("msg channel is empty %s", m.Name)
 		}
 	}
 

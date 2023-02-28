@@ -19,7 +19,7 @@ const (
 )
 
 /*module 状态映射值，只读不写*/
-var module_stateMap = []string{
+var ModStateMap = []string{
 	"init",
 	"init_error",
 	"running",

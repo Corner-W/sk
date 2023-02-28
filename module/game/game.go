@@ -29,8 +29,8 @@ func (g *GameTask) MsgProc(closeSig chan bool, message interface{}) {
 
 	log.Debug("module game Enter...")
 
-	msg := message.(Msg)
+	//msg := message.(Msg)
 
-	fmt.Println(msg)
+	fmt.Println(message.(string))
 
 }
