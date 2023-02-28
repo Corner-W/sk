@@ -97,7 +97,7 @@ func run(m *Mod) {
 	for {
 
 		select {
-		/*check channel */
+		/*check channel 由于没有default分支，如果channel是空的，那么for循环会阻塞到该分支*/
 		case msg, ok := <-m.Que:
 			if ok == true {
 				/*读到数据立即执行*/
