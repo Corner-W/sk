@@ -9,11 +9,9 @@ import (
 func main() {
 
 	log.Debug("main start...")
-
+	go telnet.Run()
 	register.Modules_main()
 
-	go telnet.Run()
-
-	select {}
+	//select {}
 
 }
