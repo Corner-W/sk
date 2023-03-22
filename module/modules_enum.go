@@ -14,6 +14,7 @@ const (
 	MODULE_STATE_INIT_ERR
 	MODULE_STATE_RUNNING
 	MODULE_STATE_CRASH
+	MODULE_STATE_CLOSE
 
 	MODULE_STATE_END
 )
@@ -24,6 +25,6 @@ var ModStateMap = []string{
 	"init_error",
 	"running",
 	"crash",
-
+	"closed",
 	"end",
 }

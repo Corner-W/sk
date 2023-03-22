@@ -35,7 +35,7 @@ func NewClient() *TcpClient {
 
 		log.Error("agent Connect remote %s failed!", addr)
 	}
-
+	conn.SetKeepAlive(true)
 	//defer conn.Close()
 	return &TcpClient{
 		Stat:  stat,

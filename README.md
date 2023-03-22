@@ -2,6 +2,9 @@ SK Server
 ====
 A pragmatic  server framework in Go (golang).
 
+提交pr请参照[编码规范](https://github.com/Corner-W/sk/blob/dev/CodeStyle.md)
+
+
 Features
 ---------
 
@@ -49,16 +52,17 @@ SK 的模块机制
 服务器在启动时进行模块的注册，例如：
 
 ```go
-func Modules_main() {
+func ModulesRun() {
 
     /*模块统一注册*/
-    ModuleReg("game", MOUDLE_ID_GAME, game.New(), 1024)
-    ModuleReg("user", MOUDLE_ID_USER, user.New(), 1024)
-    ModuleReg("dispatch", MODULE_ID_DISPATCH, NewDispatch(), 1024)
-    ModuleReg("agent", MODULE_ID_AGENT, NewAgent(), 2048)
-
+    module.Register("game", module.MOUDLE_ID_GAME, game.New(), 1024)
+    module.Register("user", module.MOUDLE_ID_USER, user.New(), 1024)
+    module.Register("dispatch", module.MODULE_ID_DISPATCH, dispatch.NewDispatch(), 1024)
+    module.Register("agent", module.MODULE_ID_AGENT, agent.NewAgent(), 2048)
+    // ModuleReg("mqtt", MODULE_ID_MQTT, NewMqtt(), 2048)
+    
     /*模块初始化，和任务启动*/
-    Init()
+    module.Startup()
 }
 ```
 

@@ -11,8 +11,12 @@ type Module interface {
 	MsgProc(closeSig chan bool, message interface{})
 }
 
+var wg sync.WaitGroup
+
 type Mod struct {
-	mi       Module
+	mi Module
+
+	//队列退出信号 if true; close this channel
 	closeSig chan bool
 	//wg       sync.WaitGroup
 
@@ -36,7 +40,7 @@ func QueryMbyID(mid uint32) (*Mod, bool) {
 	return m.(*Mod), ok
 }
 
-func ModuleReg(name string, mid uint32, mi Module, buflen uint32) bool {
+func Register(name string, mid uint32, mi Module, buflen uint32) bool {
 	m := new(Mod)
 	m.mi = mi
 	m.closeSig = make(chan bool, 1)
@@ -64,7 +68,7 @@ func ModuleReg(name string, mid uint32, mi Module, buflen uint32) bool {
 	return true
 	//modules.LoadOrStore()
 }
-func Init() {
+func Startup() {
 
 	/*集中启动所有的业务模块*/
 	Modules.Range(func(key, value interface{}) bool {
@@ -75,11 +79,47 @@ func Init() {
 		m.mi.OnInit()
 		//	m.wg.Add(1)
 		log.Debug("start module %s task queue!", m.Name)
-		go run(m)
+
+		wg.Add(1)
+		//go run(m)
+		go func(m *Mod) {
+
+			defer wg.Done()
+			m.Stat = MODULE_STATE_RUNNING
+			for {
+
+				select {
+				/*check channel 由于没有default分支，如果channel是空的，那么for循环会阻塞到该分支*/
+				case msg, ok := <-m.Que:
+					if ok == true {
+						/*读到数据立即执行*/
+						m.mi.MsgProc(m.closeSig, msg)
+					} else {
+						/*如果channel 被关闭，则会导致死循环，重写nil可以ignore该分支*/
+						//m.Que = nil
+						m.Stat = MODULE_STATE_CRASH
+						log.Error("module running err")
+						break
+					}
+				case sig := <-m.closeSig:
+					if sig == true {
+						m.Stat = MODULE_STATE_CLOSE
+						//close(m.Que)
+
+						/*停止读写该channel*/
+						break
+					}
+					//default:
+					// 此处需要释放cpu，否则cpu占用会非常高
+					//log.Error("msg channel is empty %s", m.Name)
+				}
+			}
+
+		}(m)
 
 		return true
 	})
-
+	wg.Wait()
 }
 
 /*
@@ -93,11 +133,13 @@ func Init() {
 */
 func run(m *Mod) {
 
+	defer wg.Done()
+
 	m.Stat = MODULE_STATE_RUNNING
 	for {
 
 		select {
-		/*check channel */
+		/*check channel 由于没有default分支，如果channel是空的，那么for循环会阻塞到该分支*/
 		case msg, ok := <-m.Que:
 			if ok == true {
 				/*读到数据立即执行*/

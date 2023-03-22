@@ -1,12 +1,9 @@
 package main
 
-import (
-	"github.com/Corner-W/sk/log"
-	"github.com/Corner-W/sk/module/register"
-	"github.com/Corner-W/sk/telnet"
-)
+import "github.com/Corner-W/sk/cmd"
 
 func main() {
+<<<<<<< HEAD
 
 	log.Debug("main start...")
 	go telnet.Run()
@@ -14,4 +11,7 @@ func main() {
 
 	//select {}
 
+=======
+	cmd.Execute()
+>>>>>>> dev
 }
